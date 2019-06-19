@@ -14,6 +14,7 @@ def start(update, context):
     global chatID
     chatID = context.message.chat_id
     if UsersLists[chatID] is None:
+        print("success")
         UsersLists[chatID] = []
 
 def manga(update, context):
@@ -73,7 +74,7 @@ def create_list(update, context, args):
         else:
             update.send_message(chat_id=context.message.chat_id, text="List already exists")
     else:
-        message = "" 
+        message = ""
         for argument in args:
             message += argument + " "
         context.message.text = message
