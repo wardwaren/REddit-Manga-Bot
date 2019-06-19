@@ -29,7 +29,7 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://quiet-shelf-14938.herokuapp.com/' + mytoken)
+    bot.set_webhook(url='https://fathomless-fortress-45000.herokuapp.com/' + mytoken)
     return "!", 200
 
 
