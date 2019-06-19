@@ -3,7 +3,7 @@ from utils import *
 import os
 
 client_id = os.environ['client_id']
-client_secret = os.environ['ckient_secret']
+client_secret = os.environ['client_secret']
 user_agent = os.environ['user_agent']
 username = os.environ['username']
 password = os.environ['password']
