@@ -4,7 +4,7 @@ from TeleBot import *
 import logging
 from utils import *
 from flask import Flask, request
-import telebot
+#import telebot
 
 mytoken = os.environ['mytoken']
 
@@ -14,7 +14,6 @@ mytoken = os.environ['mytoken']
 #   pass
 
 bot = telegram.Bot(token=mytoken)
-bot2 = telebot.TeleBot(mytoken)
 server = Flask(__name__)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
