@@ -1,0 +1,8 @@
+venv
+.idea/TelegramBot.iml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+__pycache__/
+/dev_settings.py
