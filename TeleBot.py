@@ -13,7 +13,7 @@ greetings = "Welcome to the manga bot! \n Type /help to get the list of possible
 
 
 def start(update, context):
-    update.send_message(chat_id=context.message.chat_id, text=greetings)
+    context.send_message(chat_id=context.message.chat_id, text=greetings)
     global chatID
     chatID = context.message.chat_id
     global key
