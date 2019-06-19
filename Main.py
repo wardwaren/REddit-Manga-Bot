@@ -8,10 +8,10 @@ import telebot
 
 mytoken = os.environ['mytoken']
 
-try:
-   from dev_settings import *
-except ImportError:
-   pass
+#try:
+#   from dev_settings import *
+#except ImportError:
+#   pass
 
 bot = telegram.Bot(token=mytoken)
 bot2 = telebot.TeleBot(mytoken)
@@ -20,17 +20,7 @@ server = Flask(__name__)
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
 
-@server.route('/' + mytoken, methods=['POST'])
-def getMessage():
-    bot2.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    return "!", 200
-
-
-@server.route("/")
-def webhook():
-    bot2.remove_webhook()
-    bot2.set_webhook(url='https://fathomless-fortress-45000.herokuapp.com/' + mytoken)
-    return "!", 200
+PORT = int(os.environ.get('PORT', '8443'))
 
 
 
@@ -60,4 +50,8 @@ if __name__ == "__main__":
     dispatcher.add_handler(clean_handler)
     dispatcher.add_handler(add_to_list_handler)
     dispatcher.add_handler(help_handler)
-    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=mytoken)
+    updater.bot.set_webhook("https://fathomless-fortress-45000.herokuapp.com/" + mytoken)
+    updater.idle()
