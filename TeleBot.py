@@ -1,8 +1,8 @@
 from utils import *
 from Reddit import *
 import telegram.ext
-MangaList = []
 DailyManga = []
+UsersLists = {}
 LastCommand = "None"
 chatID = ""
 greetings = "Welcome to the manga bot! \n Type /help to get the list of possible commands. \n " \
@@ -13,8 +13,12 @@ def start(update, context):
     update.send_message(chat_id=context.message.chat_id, text=greetings)
     global chatID
     chatID = context.message.chat_id
+    if UsersLists[chatID] is None:
+        UsersLists[chatID] = []
 
 def manga(update, context):
+    MangaList = UsersLists[chatID]
+
     if(LastCommand == "new_chapter"):
         message = (get_message(context.message.text))
         if(message != ""):
@@ -23,20 +27,21 @@ def manga(update, context):
             update.send_message(chat_id=context.message.chat_id, text="Sorry no manga with this name found")
             
     elif(LastCommand == "create_list" or LastCommand == "add_to_list"):
-        size = len(MangaList)
         title = context.message.text
         MangaList.append(title)
+        UsersLists[chatID] = MangaList
         if(title != ""):
             update.send_message(chat_id=context.message.chat_id, text=title + " was successfullly added")
-
         else:
             update.send_message(chat_id=context.message.chat_id, text="Could not add entry")
+
 
     elif (LastCommand == "remove_from_list"):
         size = len(MangaList)
         for entry in MangaList:
             if context.message.text in entry:
                 MangaList.remove(entry)
+                UsersLists[chatID] = MangaList
                 update.send_message(chat_id=context.message.chat_id, text="Entry: " + entry + " was removed")
         if size == len(MangaList):
             update.send_message(chat_id=context.message.chat_id, text="This entry is not found in your manga list")
@@ -50,21 +55,28 @@ def new_chapter(update, context, args):
     if(len(args) == 0):
         update.send_message(chat_id=context.message.chat_id, text="Please send me the manga name")
     else:
-       context.message.text = args[0]
-       manga(update, context)
+        message = ""
+        for argument in args:
+            message += argument + " "
+        context.message.text = message
+        manga(update, context)
 
 
 def create_list(update, context, args):
     global LastCommand
     LastCommand = "create_list"
     if(len(args) == 0):
+        MangaList = UsersLists[chatID]
         if (MangaList == []):
             update.send_message(chat_id=context.message.chat_id, text="Please send me the manga name to add to list \n"
                                                                       "Be precise in your naming to avoid manga with similar name")
         else:
             update.send_message(chat_id=context.message.chat_id, text="List already exists")
     else:
-        context.message.text = args[0]
+        message = "" 
+        for argument in args:
+            message += argument + " "
+        context.message.text = message
         manga(update, context)
 
 def add_to_list(update, context, args):
@@ -73,13 +85,17 @@ def add_to_list(update, context, args):
     if (len(args) == 0):
         update.send_message(chat_id=context.message.chat_id, text="Please send me the manga name to add to list")
     else:
-        context.message.text = args[0]
+        message = ""
+        for argument in args:
+            message += argument + " "
+        context.message.text = message
         manga(update, context)
 
 def print_list(update, context):
     global LastCommand
     LastCommand = "print_list"
     update.send_message(chat_id=context.message.chat_id, text="Here is the list of manga that I currently keep track of:")
+    MangaList = UsersLists[chatID]
     for entry in MangaList:
         update.send_message(chat_id=context.message.chat_id, text=entry)
 
@@ -89,18 +105,22 @@ def remove_from_list(update, context, args):
     if (len(args) == 0):
         update.send_message(chat_id=context.message.chat_id, text="Please send me the name of the manga to remove")
     else:
-        context.message.text = args[0]
+        message = ""
+        for argument in args:
+            message += argument + " "
+        context.message.text = message
         manga(update, context)
 
 def clean_list(update, context):
     global LastCommand,MangaList
-    MangaList = []
+    UsersLists[chatID] = []
     LastCommand = "clean_list"
     update.send_message(chat_id=context.message.chat_id, text="List was successfully cleaned")
 
 def get_updates(update, context):
     global LastCommand
     LastCommand = "get_updates"
+    MangaList = UsersLists[chatID]
     update.send_message(chat_id=context.message.chat_id, text="These are the new chapters of your list:")
     for entry in MangaList:
         text = get_message(entry)
@@ -112,6 +132,7 @@ def clear_chapters(bot, job):
 
 def send_chapters(bot, job):
     global DailyManga
+    MangaList = UsersLists[chatID]
     for entry in MangaList:
         text = check_fresh(entry)
         if(text != "" and text not in DailyManga):
