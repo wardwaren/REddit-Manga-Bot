@@ -8,10 +8,10 @@ import telebot
 
 mytoken = os.environ['mytoken']
 
-#try:
-#   from dev_settings import *
-#except ImportError:
-#   pass
+try:
+   from dev_settings import *
+except ImportError:
+   pass
 
 bot = telegram.Bot(token=mytoken)
 bot2 = telebot.TeleBot(mytoken)
