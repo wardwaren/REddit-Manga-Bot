@@ -13,7 +13,7 @@ def start(update, context):
     update.send_message(chat_id=context.message.chat_id, text=greetings)
     global chatID
     chatID = context.message.chat_id
-    if UsersLists[chatID] is None:
+    if UsersLists.get(chatID) is None:
         print("success")
         UsersLists[chatID] = []
 
