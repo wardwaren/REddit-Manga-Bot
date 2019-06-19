@@ -6,7 +6,7 @@ from utils import *
 from flask import Flask, request
 import telebot
 
-mytoken = ''
+mytoken = os.environ['mytoken']
 
 try:
    from dev_settings import *
