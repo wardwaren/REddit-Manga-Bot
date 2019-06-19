@@ -1,11 +1,12 @@
 import praw
 from utils import *
+import os
 
-client_id = ''
-client_secret = ''
-user_agent = ''
-username = ''
-password = ''
+client_id = os.environ['client_id']
+client_secret = os.environ['ckient_secret']
+user_agent = os.environ['user_agent']
+username = os.environ['username']
+password = os.environ['password']
 
 try:
    from dev_settings import *
