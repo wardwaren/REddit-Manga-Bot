@@ -30,7 +30,7 @@ if __name__ == "__main__":
     clear_hourly = manga_check.run_repeating(clear_chapters, interval=3600, first=0)
 #    send_new = manga_check.run_repeating(send_chapters, interval=600, first=0)
     dispatcher = updater.dispatcher
-    start_handler = CommandHandler('start', start, pass_user_data=True)
+    start_handler = CommandHandler('start', start)
     new_chapter_handler = CommandHandler('new_chapter', new_chapter, pass_args=True)
     print_list_handler = CommandHandler('print_list', print_list, pass_user_data=True)
     remove_from_list_handler = CommandHandler('remove_from_list', remove_from_list, pass_args=True)

@@ -12,14 +12,14 @@ greetings = "Welcome to the manga bot! \n Type /help to get the list of possible
             "Type /create_list to make your first list. "
 
 
-def start(update, context, user_data):
+def start(update, context):
     update.send_message(chat_id=context.message.chat_id, text=greetings)
     global chatID
     chatID = context.message.chat_id
     global key
     key = str(uuid4())
-    if user_data.get(key) is None:
-        user_data[key] = []
+    if update.user_data.get(key) is None:
+        update.user_data[key] = []
 
 def manga(update, context, user_data):
     MangaList = user_data[key]
