@@ -27,7 +27,7 @@ if __name__ == "__main__":
     updater = Updater(token=mytoken)
     manga_check = updater.job_queue
     clear_hourly = manga_check.run_repeating(clear_chapters, interval=3600, first=0)
-    send_new = manga_check.run_repeating(send_chapters, interval=600, first=0)
+ #   send_new = manga_check.run_repeating(send_chapters, interval=600, first=0)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler('start', start)
     new_chapter_handler = CommandHandler('new_chapter', new_chapter, pass_args=True)

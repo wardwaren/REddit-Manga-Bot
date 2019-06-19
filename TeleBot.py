@@ -1,8 +1,11 @@
 from utils import *
 from Reddit import *
 import telegram.ext
+from uuid import uuid4
+import pickle
+from threading import Event
+key = []
 DailyManga = []
-UsersLists = {}
 LastCommand = "None"
 chatID = ""
 greetings = "Welcome to the manga bot! \n Type /help to get the list of possible commands. \n " \
@@ -13,12 +16,13 @@ def start(update, context):
     update.send_message(chat_id=context.message.chat_id, text=greetings)
     global chatID
     chatID = context.message.chat_id
-    if UsersLists.get(chatID) is None:
-        print("success")
-        UsersLists[chatID] = []
+    global key
+    key = str(uuid4())
+    if context.user_data.get(key) is None:
+        context.user_data[key] = []
 
 def manga(update, context):
-    MangaList = UsersLists[chatID]
+    MangaList = context.user_data[key]
 
     if(LastCommand == "new_chapter"):
         message = (get_message(context.message.text))
@@ -30,7 +34,7 @@ def manga(update, context):
     elif(LastCommand == "create_list" or LastCommand == "add_to_list"):
         title = context.message.text
         MangaList.append(title)
-        UsersLists[chatID] = MangaList
+        context.user_data[key] = MangaList
         if(title != ""):
             update.send_message(chat_id=context.message.chat_id, text=title + " was successfullly added")
         else:
@@ -42,7 +46,7 @@ def manga(update, context):
         for entry in MangaList:
             if context.message.text in entry:
                 MangaList.remove(entry)
-                UsersLists[chatID] = MangaList
+                context.user_data[key] = MangaList
                 update.send_message(chat_id=context.message.chat_id, text="Entry: " + entry + " was removed")
         if size == len(MangaList):
             update.send_message(chat_id=context.message.chat_id, text="This entry is not found in your manga list")
@@ -67,7 +71,7 @@ def create_list(update, context, args):
     global LastCommand
     LastCommand = "create_list"
     if(len(args) == 0):
-        MangaList = UsersLists[chatID]
+        MangaList = context.user_data[key]
         if (MangaList == []):
             update.send_message(chat_id=context.message.chat_id, text="Please send me the manga name to add to list \n"
                                                                       "Be precise in your naming to avoid manga with similar name")
@@ -96,7 +100,7 @@ def print_list(update, context):
     global LastCommand
     LastCommand = "print_list"
     update.send_message(chat_id=context.message.chat_id, text="Here is the list of manga that I currently keep track of:")
-    MangaList = UsersLists[chatID]
+    MangaList = context.user_data[key]
     for entry in MangaList:
         update.send_message(chat_id=context.message.chat_id, text=entry)
 
@@ -114,14 +118,14 @@ def remove_from_list(update, context, args):
 
 def clean_list(update, context):
     global LastCommand,MangaList
-    UsersLists[chatID] = []
+    context.user_data[key] = []
     LastCommand = "clean_list"
     update.send_message(chat_id=context.message.chat_id, text="List was successfully cleaned")
 
 def get_updates(update, context):
     global LastCommand
     LastCommand = "get_updates"
-    MangaList = UsersLists[chatID]
+    MangaList = context.user_data[key]
     update.send_message(chat_id=context.message.chat_id, text="These are the new chapters of your list:")
     for entry in MangaList:
         text = get_message(entry)
@@ -131,14 +135,14 @@ def clear_chapters(bot, job):
     global DailyManga
     DailyManga = []
 
-def send_chapters(bot, job):
-    global DailyManga
-    MangaList = UsersLists[chatID]
-    for entry in MangaList:
-        text = check_fresh(entry)
-        if(text != "" and text not in DailyManga):
-            bot.send_message(chat_id=chatID, text="New Chapter! \n" + text)
-            DailyManga.append(text)
+#def send_chapters(bot, job):
+#    global DailyManga
+#    MangaList = UsersLists[chatID]
+#    for entry in MangaList:
+#        text = check_fresh(entry)
+#        if(text != "" and text not in DailyManga):
+#            bot.send_message(chat_id=chatID, text="New Chapter! \n" + text)
+#            DailyManga.append(text)
 
 def help(update, context):
     global LastCommand
