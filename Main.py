@@ -1,9 +1,10 @@
-import telegram
+import os
 from telegram.ext import Updater, CommandHandler,MessageHandler, Filters, InlineQueryHandler
 from TeleBot import *
 import logging
 from utils import *
-
+from flask import Flask, request
+import telebot
 
 mytoken = ''
 
@@ -13,9 +14,25 @@ except ImportError:
    pass
 
 bot = telegram.Bot(token=mytoken)
+bot2 = telebot.TeleBot(mytoken)
+server = Flask(__name__)
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                      level=logging.INFO)
+
+@server.route('/' + mytoken, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
+
+
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://quiet-shelf-14938.herokuapp.com/' + mytoken)
+    return "!", 200
+
+
 
 if __name__ == "__main__":
     updater = Updater(token=mytoken)
@@ -43,4 +60,4 @@ if __name__ == "__main__":
     dispatcher.add_handler(clean_handler)
     dispatcher.add_handler(add_to_list_handler)
     dispatcher.add_handler(help_handler)
-    updater.start_polling()
+    server.run(host="0.0.0.0", port=int(os.environ.get('PORT', 5000)))
