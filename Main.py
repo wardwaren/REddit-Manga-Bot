@@ -1,10 +1,10 @@
 import os
-from telegram.ext import Updater, CommandHandler,MessageHandler, Filters, InlineQueryHandler
+from telegram.ext import Updater, CommandHandler,MessageHandler, Filters, PicklePersistence
 from TeleBot import *
 import logging
 from utils import *
 from flask import Flask, request
-#import telebot
+import pickle
 
 mytoken = os.environ['mytoken']
 
@@ -24,21 +24,22 @@ PORT = int(os.environ.get('PORT', '8443'))
 
 
 if __name__ == "__main__":
-    updater = Updater(token=mytoken)
+    my_persistence = PicklePersistence(filename='my_file')
+    updater = Updater(token=mytoken,persistence=my_persistence, use_context=True)
     manga_check = updater.job_queue
     clear_hourly = manga_check.run_repeating(clear_chapters, interval=3600, first=0)
- #   send_new = manga_check.run_repeating(send_chapters, interval=600, first=0)
+#    send_new = manga_check.run_repeating(send_chapters, interval=600, first=0)
     dispatcher = updater.dispatcher
-    start_handler = CommandHandler('start', start)
+    start_handler = CommandHandler('start', start, pass_user_data=True)
     new_chapter_handler = CommandHandler('new_chapter', new_chapter, pass_args=True)
-    print_list_handler = CommandHandler('print_list', print_list)
+    print_list_handler = CommandHandler('print_list', print_list, pass_user_data=True)
     remove_from_list_handler = CommandHandler('remove_from_list', remove_from_list, pass_args=True)
-    get_updates_handler = CommandHandler('get_updates', get_updates)
-    create_handler = CommandHandler('create_list', create_list, pass_args=True)
+    get_updates_handler = CommandHandler('get_updates', get_updates, pass_user_data=True)
+    create_handler = CommandHandler('create_list', create_list, pass_args=True, pass_user_data=True)
     add_to_list_handler = CommandHandler('add_to_list', add_to_list, pass_args=True)
-    clean_handler = CommandHandler('clean_list', clean_list)
-    help_handler = CommandHandler('help', help)
-    manga_handler = MessageHandler(Filters.text, manga)
+    clean_handler = CommandHandler('clean_list', clean_list, pass_user_data=True)
+    help_handler = CommandHandler('help', help, pass_user_data=True)
+    manga_handler = MessageHandler(Filters.text, manga, pass_user_data=True)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(new_chapter_handler)
     dispatcher.add_handler(print_list_handler)
