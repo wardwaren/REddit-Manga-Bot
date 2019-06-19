@@ -59,7 +59,8 @@ def create_list(update, context, args):
     LastCommand = "create_list"
     if(len(args) == 0):
         if (MangaList == []):
-            update.send_message(chat_id=context.message.chat_id, text="Please send me the manga name to add to list")
+            update.send_message(chat_id=context.message.chat_id, text="Please send me the manga name to add to list \n"
+                                                                      "Be precise in your naming to avoid manga with similar name")
         else:
             update.send_message(chat_id=context.message.chat_id, text="List already exists")
     else:
