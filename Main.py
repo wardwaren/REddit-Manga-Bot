@@ -22,14 +22,14 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 @server.route('/' + mytoken, methods=['POST'])
 def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    bot2.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
 
 
 @server.route("/")
 def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url='https://fathomless-fortress-45000.herokuapp.com/' + mytoken)
+    bot2.remove_webhook()
+    bot2.set_webhook(url='https://fathomless-fortress-45000.herokuapp.com/' + mytoken)
     return "!", 200
 
 
