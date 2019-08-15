@@ -137,7 +137,8 @@ def clear_chapters(bot, job):
 
 def send_update(context: telegram.ext.CallbackContext):
     global chatID
-    context.bot.send_message(chat_id=chatID, text="You're loh")
+    message = loadCreative()
+    context.bot.send_message(chat_id=chatID, text=message)
 
 
 
