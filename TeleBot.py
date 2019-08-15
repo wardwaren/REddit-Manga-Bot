@@ -136,7 +136,7 @@ def clear_chapters(bot, job):
     DailyManga = []
 
 def send_update(bot, job):
-    context.bot.send_message(chat_id=update.message.chat_id, text="You're loh")
+    bot.send_message(chat_id=update.message.chat_id, text="You're loh")
 
 
 
