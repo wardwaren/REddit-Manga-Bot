@@ -14,3 +14,6 @@ def format_title(s):
     title = title[1:]
     title = title[::-1]
     return title
+
+
+

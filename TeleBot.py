@@ -135,14 +135,10 @@ def clear_chapters(bot, job):
     global DailyManga
     DailyManga = []
 
-#def send_chapters(bot, job):
-#    global DailyManga
-#    MangaList = UsersLists[chatID]
-#    for entry in MangaList:
-#        text = check_fresh(entry)
-#        if(text != "" and text not in DailyManga):
-#            bot.send_message(chat_id=chatID, text="New Chapter! \n" + text)
-#            DailyManga.append(text)
+def send_update(bot, job):
+    context.bot.send_message(chat_id=update.message.chat_id, text="You're loh")
+
+
 
 def help(update, context):
     global LastCommand
