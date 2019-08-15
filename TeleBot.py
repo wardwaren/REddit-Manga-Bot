@@ -135,7 +135,7 @@ def clear_chapters(bot, job):
     global DailyManga
     DailyManga = []
 
-def send_update(bot, job):
+def send_update(context: telegram.ext.CallbackContext):
     bot.send_message(chat_id=update.message.chat_id, text="You're loh")
 
 
