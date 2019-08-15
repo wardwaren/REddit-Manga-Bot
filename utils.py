@@ -57,9 +57,10 @@ def loadCreative():
     arrayOfSections = json.loads(response.text)['COMPONENTS']
     responses = []
     for section in arrayOfSections:
-        # if int(section['REGISTEREDSTUDENTS']) < 16:
-        #     responses.append(section['INSTRUCTORNAME'])
-        responses.append(section['INSTRUCTORNAME'] + ": " + section['REGISTEREDSTUDENTS'] + "/" + section['CLASSCAPACITY'])
-    return ", ".join(responses) #if len(responses) !=0 else json.dumps(json.loads(response.text)['COMPONENTS'])
+         if int(section['REGISTEREDSTUDENTS']) < 16:
+             responses.append(
+                 section['INSTRUCTORNAME'] + ": " + section['REGISTEREDSTUDENTS'] + "/" + section['CLASSCAPACITY'])
+
+    return ", ".join(responses) if len(responses) !=0 else None
 
 
